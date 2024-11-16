@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'slack' => [
+    'telegram' => [
         'key' => env('TELEGRAM_KEY'),
         'url' => env('APP_URL', 'http://localhost').'/api/telegram?key='.env('TELEGRAM_KEY'),
         'username' => env('TELEGRAM_USERNAME'),
