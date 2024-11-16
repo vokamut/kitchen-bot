@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Api\TelegramRequest;
 use App\Services\Bot;
 use App\Services\Telegram;
 use Illuminate\Http\JsonResponse;
