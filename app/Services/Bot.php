@@ -75,6 +75,7 @@ final class Bot
                 $recipe->text = $message;
             }
 
+            $recipe->category = CategoryEnum::NONE;
             $recipe->save();
 
             $this->telegramUser->state = null;

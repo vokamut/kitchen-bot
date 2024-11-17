@@ -6,17 +6,19 @@ namespace App\Models;
 
 enum CategoryEnum: int
 {
-    case BREAKFASTS = 0;
-    case FIRST_COURSES = 1;
-    case MAIN_COURSES = 2;
-    case SIDE_DISHES = 3;
-    case APPETIZERS = 4;
-    case PREPARATIONS = 5;
-    case SALADS = 6;
-    case SAUCES = 7;
-    case DESSERTS = 8;
-    case BAKED_GOODS = 9;
+    case NONE = 0;
+    case BREAKFASTS = 1;
+    case FIRST_COURSES = 2;
+    case MAIN_COURSES = 3;
+    case SIDE_DISHES = 4;
+    case APPETIZERS = 5;
+    case PREPARATIONS = 6;
+    case SALADS = 7;
+    case SAUCES = 8;
+    case DESSERTS = 9;
+    case BAKED_GOODS = 10;
 
+    public const string NONE_LABEL = 'Без категории';
     public const string BREAKFASTS_LABEL = 'Завтраки';
     public const string FIRST_COURSES_LABEL = 'Первые блюда';
     public const string MAIN_COURSES_LABEL = 'Вторые блюда';
@@ -31,6 +33,7 @@ enum CategoryEnum: int
     public static function labels(): array
     {
         return [
+            self::NONE->value => self::NONE_LABEL,
             self::BREAKFASTS->value => self::BREAKFASTS_LABEL,
             self::FIRST_COURSES->value => self::FIRST_COURSES_LABEL,
             self::MAIN_COURSES->value => self::MAIN_COURSES_LABEL,
@@ -47,6 +50,7 @@ enum CategoryEnum: int
     public static function getValueByLabel(string $label): int
     {
         return match ($label) {
+            self::NONE_LABEL => self::NONE->value,
             self::BREAKFASTS_LABEL => self::BREAKFASTS->value,
             self::FIRST_COURSES_LABEL => self::FIRST_COURSES->value,
             self::MAIN_COURSES_LABEL => self::MAIN_COURSES->value,
@@ -63,6 +67,7 @@ enum CategoryEnum: int
     public static function getLabelByValue(int $value): string
     {
         return match ($value) {
+            self::NONE->value => self::NONE_LABEL,
             self::BREAKFASTS->value => self::BREAKFASTS_LABEL,
             self::FIRST_COURSES->value => self::FIRST_COURSES_LABEL,
             self::MAIN_COURSES->value => self::MAIN_COURSES_LABEL,
