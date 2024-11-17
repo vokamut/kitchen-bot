@@ -173,7 +173,7 @@ final class Bot
 
         $this->telegram->replyMessage(
             'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.
-            $recipe->text
+            $recipe->text.$recipe->link
         );
 
         $this->telegramUser->state = null;
