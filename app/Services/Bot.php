@@ -32,12 +32,20 @@ final class Bot
             return;
         }
 
+        if (isset(CategoryEnum::labels()[$this->telegram->message])) {
+            $this->searchRecipeByCategory(CategoryEnum::getCaseByLabel($this->telegram->message));
+
+            $this->telegramUser->state = null;
+            $this->telegramUser->save();
+        }
+
         $flows = [
             '/start' => 'start',
+            'Добавить' => 'new',
             '/new' => 'new',
             '/recipeCategory' => 'recipeCategory',
+            'Поиск' => 'search',
             '/search' => 'search',
-            '/searchRecipeByCategory' => 'searchRecipeByCategory',
             '/r' => 'r',
             '/none' => 'none',
         ];
@@ -63,7 +71,12 @@ final class Bot
 
     private function start(): void
     {
-        $this->telegram->replyMessage('Telegram-бот для хранения рецептов');
+        $this->telegram->replyMessageWithButtons(
+            'Telegram-бот для хранения рецептов',
+            [
+                ['Добавить', 'Поиск'],
+            ]
+        );
 
         $this->telegramUser->state = null;
         $this->telegramUser->save();
@@ -131,19 +144,35 @@ final class Bot
 
     private function search(): void
     {
-        $this->telegram->replyMessageWithInlineButtons(
-            'Выберите категорию',
-            $this->getButtonsByCategories('/searchRecipeByCategory')
+        if ($this->telegramUser->state === 'search') {
+            $recipes = Recipe::query()
+                ->where('title', 'LIKE', '%'.$this->telegram->message.'%')
+                ->orWhere('text', 'LIKE', '%'.$this->telegram->message.'%')
+                ->orderBy('title')
+                ->get();
+
+            $text = 'Выберите рецепт:'.PHP_EOL.PHP_EOL;
+
+            foreach ($recipes as $recipe) {
+                $text .= '/r_'.$recipe->id.' '.$recipe->title.PHP_EOL;
+            }
+
+            $this->telegram->replyMessage($text);
+
+            return;
+        }
+
+        $this->telegram->replyMessageWithButtons(
+            'Выберите категорию или напишите что искать',
+            $this->getKeyboardByCategories()
         );
 
-        $this->telegramUser->state = null;
+        $this->telegramUser->state = 'search';
         $this->telegramUser->save();
     }
 
-    private function searchRecipeByCategory(): void
+    private function searchRecipeByCategory(CategoryEnum $category): void
     {
-        $category = (int) $this->telegram->commandPostfixes[0];
-
         $recipes = Recipe::query()
             ->select('id', 'title')
             ->where('category', $category)
@@ -180,18 +209,36 @@ final class Bot
         $this->telegramUser->save();
     }
 
+    private function getKeyboardByCategories(): array
+    {
+        $categories = CategoryEnum::labels();
+
+        $buttons = [];
+
+        $row = 0;
+        foreach ($categories as $categoryName) {
+            $buttons[$row][] = $categoryName;
+
+            if (count($buttons[$row]) === 3) {
+                $row++;
+            }
+        }
+
+        return $buttons;
+    }
+
     private function getButtonsByCategories(string $command): array
     {
         $categories = CategoryEnum::labels();
 
-        $buttons  = [];
+        $buttons = [];
 
         $row = 0;
         foreach ($categories as $categoryId => $categoryName) {
-            $buttons[$row][] =  ['text' => $categoryName, 'callback_data' => $command.'_'.$categoryId];
+            $buttons[$row][] = ['text' => $categoryName, 'callback_data' => $command.'_'.$categoryId];
 
             if (count($buttons[$row]) === 3) {
-                ++$row;
+                $row++;
             }
         }
 

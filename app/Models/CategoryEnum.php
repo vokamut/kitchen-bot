@@ -19,15 +19,25 @@ enum CategoryEnum: int
     case NONE = 0;
 
     public const string BREAKFASTS_LABEL = 'Завтраки';
+
     public const string FIRST_COURSES_LABEL = 'Первые блюда';
+
     public const string MAIN_COURSES_LABEL = 'Вторые блюда';
+
     public const string SIDE_DISHES_LABEL = 'Гарниры';
+
     public const string SALADS_LABEL = 'Салаты';
+
     public const string APPETIZERS_LABEL = 'Закуски';
+
     public const string BAKED_GOODS_LABEL = 'Выпечка';
+
     public const string DESSERTS_LABEL = 'Десерты';
+
     public const string PREPARATIONS_LABEL = 'Заготовки';
+
     public const string SAUCES_LABEL = 'Соусы';
+
     public const string NONE_LABEL = 'Без категории';
 
     public static function labels(): array
@@ -112,6 +122,23 @@ enum CategoryEnum: int
             self::PREPARATIONS->value => self::PREPARATIONS,
             self::SAUCES->value => self::SAUCES,
             self::NONE->value => self::NONE,
+        };
+    }
+
+    public static function getCaseByLabel(string $label): self
+    {
+        return match ($label) {
+            self::BREAKFASTS_LABEL => self::BREAKFASTS,
+            self::FIRST_COURSES_LABEL => self::FIRST_COURSES,
+            self::MAIN_COURSES_LABEL => self::MAIN_COURSES,
+            self::SIDE_DISHES_LABEL => self::SIDE_DISHES,
+            self::SALADS_LABEL => self::SALADS,
+            self::APPETIZERS_LABEL => self::APPETIZERS,
+            self::BAKED_GOODS_LABEL => self::BAKED_GOODS,
+            self::DESSERTS_LABEL => self::DESSERTS,
+            self::PREPARATIONS_LABEL => self::PREPARATIONS,
+            self::SAUCES_LABEL => self::SAUCES,
+            self::NONE_LABEL => self::NONE,
         };
     }
 }

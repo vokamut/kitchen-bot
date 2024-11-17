@@ -24,7 +24,7 @@ class Recipe extends Model
     ];
 
     protected $fillable = [
-        'category'
+        'category',
     ];
 
     protected static function boot(): void
