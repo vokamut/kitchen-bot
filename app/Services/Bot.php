@@ -32,7 +32,7 @@ final class Bot
             return;
         }
 
-        if (isset(CategoryEnum::labels()[$this->telegram->message])) {
+        if (in_array($this->telegram->message, CategoryEnum::labels(), true)) {
             $this->searchRecipeByCategory(CategoryEnum::getCaseByLabel($this->telegram->message));
 
             $this->telegramUser->state = null;
