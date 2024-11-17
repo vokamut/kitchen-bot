@@ -105,7 +105,7 @@ final class Telegram
             }
         }
 
-        preg_match('~^(/\w+?)([_\d]*)@?.*~', $this->fullMessage, $matches);
+        preg_match('~^(/[a-z\d]+_?)([_\d]*)@?~i', $this->fullMessage, $matches);
 
         $this->message = (string) str_replace('@'.config('services.telegram.username'), '', $this->fullMessage);
 
