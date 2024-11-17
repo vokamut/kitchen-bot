@@ -37,6 +37,8 @@ final class Bot
             '/new' => 'new',
             '/recipeCategory' => 'recipeCategory',
             '/search' => 'search',
+            '/searchRecipeByCategory' => 'searchRecipeByCategory',
+            '/r' => 'r',
             '/none' => 'none',
         ];
 
@@ -90,20 +92,10 @@ final class Bot
             $this->telegramUser->state = null;
             $this->telegramUser->save();
 
-            $categories = CategoryEnum::labels();
-
-            $buttons  = [];
-
-            $row = 0;
-            foreach ($categories as $categoryId => $categoryName) {
-                $buttons[$row][] =  ['text' => $categoryName, 'callback_data' => '/recipeCategory_'.$recipe->id.'_'.$categoryId];
-
-                if (count($buttons[$row]) === 3) {
-                    ++$row;
-                }
-            }
-
-            $this->telegram->replyMessageWithInlineButtons('Рецепт сохранен, выберите категорию', $buttons);
+            $this->telegram->replyMessageWithInlineButtons(
+                'Рецепт сохранен, выберите категорию',
+                $this->getButtonsByCategories('/recipeCategory_'.$recipe->id)
+            );
 
             return;
         }
@@ -135,6 +127,75 @@ final class Bot
 
         $this->telegramUser->state = null;
         $this->telegramUser->save();
+    }
+
+    private function search(): void
+    {
+        $this->telegram->replyMessageWithInlineButtons(
+            'Выберите категорию',
+            $this->getButtonsByCategories('/searchRecipeByCategory')
+        );
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
+    }
+
+    private function searchRecipeByCategory(): void
+    {
+        $category = (int) $this->telegram->commandPostfixes[0];
+
+        $recipes = Recipe::query()
+            ->select('id', 'title')
+            ->where('category', $category)
+            ->orderBy('title')
+            ->get();
+
+        $text = 'Выберите рецепт:'.PHP_EOL.PHP_EOL;
+
+        foreach ($recipes as $recipe) {
+            $text .= '/r_'.$recipe->id.' '.$recipe->title.PHP_EOL;
+        }
+
+        $this->telegram->replyMessage($text);
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
+    }
+
+    private function r(): void
+    {
+        $recipeId = (int) $this->telegram->commandPostfixes[0];
+
+        $recipe = Recipe::query()
+            ->where('id', $recipeId)
+            ->orderBy('title')
+            ->first();
+
+        $this->telegram->replyMessage(
+            'Рецепт: '.$recipe->title.PHP_EOL.
+            $recipe->text
+        );
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
+    }
+
+    private function getButtonsByCategories(string $command): array
+    {
+        $categories = CategoryEnum::labels();
+
+        $buttons  = [];
+
+        $row = 0;
+        foreach ($categories as $categoryId => $categoryName) {
+            $buttons[$row][] =  ['text' => $categoryName, 'callback_data' => $command.'_'.$categoryId];
+
+            if (count($buttons[$row]) === 3) {
+                ++$row;
+            }
+        }
+
+        return $buttons;
     }
 
     private function getTitleFromUrl(string $url): string
