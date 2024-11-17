@@ -172,7 +172,7 @@ final class Bot
             ->first();
 
         $this->telegram->replyMessage(
-            'Рецепт: '.$recipe->title.PHP_EOL.
+            'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.
             $recipe->text
         );
 
