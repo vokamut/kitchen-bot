@@ -37,10 +37,13 @@ final class Bot
 
             $this->telegramUser->state = null;
             $this->telegramUser->save();
+
+            return;
         }
 
         $flows = [
             '/start' => 'start',
+            'Назад' => 'back',
             'Добавить' => 'new',
             '/new' => 'new',
             '/recipeCategory' => 'recipeCategory',
@@ -73,6 +76,19 @@ final class Bot
     {
         $this->telegram->replyMessageWithButtons(
             'Telegram-бот для хранения рецептов',
+            [
+                ['Добавить', 'Поиск'],
+            ]
+        );
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
+    }
+
+    private function back(): void
+    {
+        $this->telegram->replyMessageWithButtons(
+            'Выберите действие',
             [
                 ['Добавить', 'Поиск'],
             ]
@@ -223,6 +239,10 @@ final class Bot
                 $row++;
             }
         }
+
+        $buttons[$row + 1] = [
+            'Назад'
+        ];
 
         return $buttons;
     }
