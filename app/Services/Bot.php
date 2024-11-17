@@ -242,6 +242,15 @@ final class Bot
             ->orderBy('title')
             ->first();
 
+        if ($recipe === null) {
+            $this->telegram->replyMessage('Нет такого рецепта');
+
+            $this->telegramUser->state = null;
+            $this->telegramUser->save();
+
+            return;
+        }
+
         $this->telegram->replyMessageWithInlineButtons(
             'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
             [[['text' => 'Удалить', 'callback_data' => '/delete_'.$recipe->id]]],
