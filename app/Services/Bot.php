@@ -43,6 +43,7 @@ final class Bot
 
         $flows = [
             '/start' => 'start',
+            '/delete' => 'delete',
             'Назад' => 'back',
             'Добавить' => 'new',
             '/new' => 'new',
