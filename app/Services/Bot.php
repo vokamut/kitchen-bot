@@ -94,11 +94,16 @@ final class Bot
 
             $buttons  = [];
 
+            $row = 0;
             foreach ($categories as $categoryId => $categoryName) {
-                $buttons[] =  ['text' => $categoryName, 'callback_data' => '/recipeCategory_'.$recipe->id.'_'.$categoryId];
+                $buttons[$row][] =  ['text' => $categoryName, 'callback_data' => '/recipeCategory_'.$recipe->id.'_'.$categoryId];
+
+                if (count($buttons[$row]) === 3) {
+                    ++$row;
+                }
             }
 
-            $this->telegram->replyMessageWithInlineButtons('Рецепт сохранен, выберите категорию', [$buttons]);
+            $this->telegram->replyMessageWithInlineButtons('Рецепт сохранен, выберите категорию', $buttons);
 
             return;
         }
