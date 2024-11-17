@@ -111,12 +111,14 @@ final class Bot
 
     private function recipeCategory(): void
     {
-        $recipeId = $this->telegram->commandPostfixes[0];
-        $category = $this->telegram->commandPostfixes[1];
+        $recipeId = (int) $this->telegram->commandPostfixes[0];
+        $category = (int) $this->telegram->commandPostfixes[1];
 
-        Recipe::query()->where('id', $recipeId)->update(['category' => $category]);
+        $recipe = Recipe::query()->where('id', $recipeId)->first();
+        $recipe->category = CategoryEnum::getCaseByValue($category);
+        $recipe->save();
 
-        $this->telegram->replyMessage('Категория сохранена');
+        $this->telegram->replyMessage('Категория сохранена для рецепта: '.$recipe->title);
 
         $this->telegramUser->state = null;
         $this->telegramUser->save();

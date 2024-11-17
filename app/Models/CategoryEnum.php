@@ -80,4 +80,21 @@ enum CategoryEnum: int
             self::BAKED_GOODS->value => self::BAKED_GOODS_LABEL,
         };
     }
+
+    public static function getCaseByValue(int $value): self
+    {
+        return match ($value) {
+            self::NONE->value => self::NONE,
+            self::BREAKFASTS->value => self::BREAKFASTS,
+            self::FIRST_COURSES->value => self::FIRST_COURSES,
+            self::MAIN_COURSES->value => self::MAIN_COURSES,
+            self::SIDE_DISHES->value => self::SIDE_DISHES,
+            self::APPETIZERS->value => self::APPETIZERS,
+            self::PREPARATIONS->value => self::PREPARATIONS,
+            self::SALADS->value => self::SALADS,
+            self::SAUCES->value => self::SAUCES,
+            self::DESSERTS->value => self::DESSERTS,
+            self::BAKED_GOODS->value => self::BAKED_GOODS,
+        };
+    }
 }
