@@ -44,10 +44,16 @@ final class Bot
 
         if (isset($flows[$this->telegram->command])) {
             $method = $flows[$this->telegram->command];
+
+            $this->telegramUser->state = null;
+            $this->telegramUser->save();
         } elseif (isset($flows[$this->telegram->message])) {
             $method = $flows[$this->telegram->message];
+
+            $this->telegramUser->state = null;
+            $this->telegramUser->save();
         } elseif ($this->telegramUser->state) {
-            $method = $flows[$this->telegramUser->state];
+            $method = $this->telegramUser->state;
         }
 
         $this->$method();
@@ -56,11 +62,14 @@ final class Bot
     private function start(): void
     {
         $this->telegram->replyMessage('Telegram-бот для хранения рецептов');
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
     }
 
     private function new(): void
     {
-        if ($this->telegramUser->state === '/new') {
+        if ($this->telegramUser->state === 'new') {
             $recipe = new Recipe;
 
             $message = trim($this->telegram->message);
@@ -96,7 +105,7 @@ final class Bot
 
         $this->telegram->replyMessage('Пришлите ссылку или текст рецепта');
 
-        $this->telegramUser->state = '/new';
+        $this->telegramUser->state = 'new';
         $this->telegramUser->save();
     }
 
@@ -108,11 +117,17 @@ final class Bot
         Recipe::query()->where('id', $recipeId)->update(['category' => $category]);
 
         $this->telegram->replyMessage('Категория сохранена');
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
     }
 
     private function none(): void
     {
         $this->telegram->replyMessage('Неизвестная команда');
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
     }
 
     private function getTitleFromUrl(string $url): string
