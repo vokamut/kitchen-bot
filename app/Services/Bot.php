@@ -167,6 +167,12 @@ final class Bot
                 ->orderBy('title')
                 ->get();
 
+            if ($recipes->isEmpty()) {
+                $this->telegram->replyMessage('Рецепты не найдены');
+
+                return;
+            }
+
             $text = 'Выберите рецепт:'.PHP_EOL.PHP_EOL;
 
             foreach ($recipes as $recipe) {
@@ -194,6 +200,12 @@ final class Bot
             ->where('category', $category->value)
             ->orderBy('title')
             ->get();
+
+        if ($recipes->isEmpty()) {
+            $this->telegram->replyMessage('В этой категории нет рецептов');
+
+            return;
+        }
 
         $text = 'Выберите рецепт:'.PHP_EOL.PHP_EOL;
 
