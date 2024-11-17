@@ -172,8 +172,8 @@ final class Bot
             ->first();
 
         $this->telegram->replyMessage(
-            'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.
-            $recipe->text.$recipe->link
+            message: 'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
+            disableWebPagePreview: false
         );
 
         $this->telegramUser->state = null;
