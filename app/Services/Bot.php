@@ -175,7 +175,7 @@ final class Bot
     {
         $recipes = Recipe::query()
             ->select('id', 'title')
-            ->where('category', $category)
+            ->where('category', $category->value)
             ->orderBy('title')
             ->get();
 
