@@ -81,6 +81,23 @@ enum CategoryEnum: int
         };
     }
 
+    public static function getLabelByCase(self $case): string
+    {
+        return match ($case) {
+            self::NONE => self::NONE_LABEL,
+            self::BREAKFASTS => self::BREAKFASTS_LABEL,
+            self::FIRST_COURSES => self::FIRST_COURSES_LABEL,
+            self::MAIN_COURSES => self::MAIN_COURSES_LABEL,
+            self::SIDE_DISHES => self::SIDE_DISHES_LABEL,
+            self::APPETIZERS => self::APPETIZERS_LABEL,
+            self::PREPARATIONS => self::PREPARATIONS_LABEL,
+            self::SALADS => self::SALADS_LABEL,
+            self::SAUCES => self::SAUCES_LABEL,
+            self::DESSERTS => self::DESSERTS_LABEL,
+            self::BAKED_GOODS => self::BAKED_GOODS_LABEL,
+        };
+    }
+
     public static function getCaseByValue(int $value): self
     {
         return match ($value) {

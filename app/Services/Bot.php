@@ -123,7 +123,7 @@ final class Bot
         $recipe->category = CategoryEnum::getCaseByValue($category);
         $recipe->save();
 
-        $this->telegram->replyMessage('Категория сохранена для рецепта: '.$recipe->title);
+        $this->telegram->replyMessage('Рецепт "'.$recipe->title.'" помещен в категорию "'.CategoryEnum::getLabelByCase($recipe->category).'"');
 
         $this->telegramUser->state = null;
         $this->telegramUser->save();
