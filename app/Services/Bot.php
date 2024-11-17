@@ -157,6 +157,7 @@ final class Bot
 
         Recipe::query()->where('id', $recipeId)->delete();
 
+        $this->telegram->deleteMessage($this->telegram->chatId, $this->telegram->messageId);
         $this->telegram->replyMessage('Рецепт удален');
 
         $this->telegramUser->state = null;
