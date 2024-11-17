@@ -150,6 +150,18 @@ final class Bot
         $this->telegramUser->save();
     }
 
+    private function delete(): void
+    {
+        $recipeId = (int) $this->telegram->commandPostfixes[0];
+
+        Recipe::query()->where('id', $recipeId)->delete();
+
+        $this->telegram->replyMessage('Рецепт удален');
+
+        $this->telegramUser->state = null;
+        $this->telegramUser->save();
+    }
+
     private function none(): void
     {
         $this->telegram->replyMessage('Неизвестная команда');
@@ -228,9 +240,10 @@ final class Bot
             ->orderBy('title')
             ->first();
 
-        $this->telegram->replyMessage(
-            message: 'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
-            disableWebPagePreview: false
+        $this->telegram->replyMessageWithInlineButtons(
+            'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
+            [[['text' => 'Удалить', 'callback_data' => '/delete_'.$recipe->id]]],
+            false
         );
 
         $this->telegramUser->state = null;
@@ -253,7 +266,7 @@ final class Bot
         }
 
         $buttons[$row + 1] = [
-            'Назад'
+            'Назад',
         ];
 
         return $buttons;

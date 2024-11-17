@@ -215,9 +215,9 @@ final class Telegram
         return $this->sendMessage($this->chatId, $message, $replyMessageId, $entities, $disableWebPagePreview);
     }
 
-    public function replyMessageWithInlineButtons(string $message, array $buttons): array
+    public function replyMessageWithInlineButtons(string $message, array $buttons, bool $disableWebPagePreview = true): array
     {
-        return $this->sendMessageWithInlineButtons($this->chatId, $message, $buttons);
+        return $this->sendMessageWithInlineButtons($this->chatId, $message, $buttons, $disableWebPagePreview);
     }
 
     public function replyMessageWithButtons(string $message, array $buttons): array
@@ -378,13 +378,13 @@ final class Telegram
         ]);
     }
 
-    public function sendMessageWithInlineButtons(int $chatId, string $message, array $buttons): array
+    public function sendMessageWithInlineButtons(int $chatId, string $message, array $buttons, bool $disableWebPagePreview = true): array
     {
         return $this->sendRaw('sendMessage', [
             'chat_id' => $chatId,
             'text' => $message,
             'parse_mode' => 'html',
-            'disable_web_page_preview' => true,
+            'disable_web_page_preview' => $disableWebPagePreview,
             'reply_markup' => [
                 'inline_keyboard' => $buttons,
             ],
