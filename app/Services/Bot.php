@@ -52,6 +52,7 @@ final class Bot
             'Добавить' => 'new',
             '/new' => 'new',
             '/recipeCategory' => 'recipeCategory',
+            '/backRecipeCategory' => 'backRecipeCategory',
             'Поиск' => 'search',
             '/search' => 'search',
             '/r' => 'r',
@@ -128,7 +129,7 @@ final class Bot
 
             $this->telegram->replyMessageWithInlineButtons(
                 'Рецепт сохранен, выберите категорию',
-                $this->getButtonsByCategories('/recipeCategory_'.$recipe->id)
+                $this->getButtonsByCategories('/recipeCategory', $recipe->id)
             );
 
             return;
@@ -140,10 +141,33 @@ final class Bot
         $this->telegramUser->save();
     }
 
+    private function backRecipeCategory(): void
+    {
+        $recipeId = (int) $this->telegram->commandPostfixes[0];
+
+        $this->telegram->editMessageTextWithInlineButtons(
+            $this->telegram->chatId,
+            $this->telegram->messageId,
+            'Рецепт сохранен, выберите категорию',
+            $this->getButtonsByCategories('/recipeCategory', $recipeId)
+        );
+    }
+
     private function recipeCategory(): void
     {
         $recipeId = (int) $this->telegram->commandPostfixes[0];
         $category = (int) $this->telegram->commandPostfixes[1];
+
+        if (array_key_exists($category, CategoryEnum::parentLabels())) {
+            $this->telegram->editMessageTextWithInlineButtons(
+                $this->telegram->chatId,
+                $this->telegram->messageId,
+                'Рецепт сохранен, выберите категорию',
+                $this->getButtonsByCategories('/recipeCategory', $recipeId, $category)
+            );
+
+            return;
+        }
 
         $recipe = Recipe::query()->where('id', $recipeId)->first();
 
@@ -173,7 +197,7 @@ final class Bot
             $this->telegram->request['callback_query']['message']['text'],
             [[
                 ['text' => 'Нет', 'callback_data' => '/deleteNo_'.$recipeId],
-                ['text' => 'Точно удалить?', 'callback_data' => '/deleteYes_'.$recipeId],
+                ['text' => 'Удалить', 'callback_data' => '/deleteYes_'.$recipeId],
             ]],
         );
     }
@@ -237,9 +261,14 @@ final class Bot
             return;
         }
 
+        $category = null;
+        if (array_key_exists(0, $this->telegram->commandPostfixes)) {
+            $category = (int) $this->telegram->commandPostfixes[0];
+        }
+
         $this->telegram->replyMessageWithButtons(
             'Выберите категорию или напишите что искать',
-            $this->getKeyboardByCategories()
+            $this->getKeyboardByCategories($category)
         );
 
         $this->telegramUser->state = 'search';
@@ -300,9 +329,9 @@ final class Bot
         $this->telegramUser->save();
     }
 
-    private function getKeyboardByCategories(): array
+    private function getKeyboardByCategories(?int $category = null): array
     {
-        $categories = CategoryEnum::labels();
+        $categories = CategoryEnum::labels($category);
 
         $buttons = [];
 
@@ -324,19 +353,23 @@ final class Bot
         return $buttons;
     }
 
-    private function getButtonsByCategories(string $command): array
+    private function getButtonsByCategories(string $command, ?int $recipeId = null, ?int $category = null): array
     {
-        $categories = CategoryEnum::labels();
+        $categories = CategoryEnum::labels($category);
 
         $buttons = [];
 
         $row = 0;
         foreach ($categories as $categoryId => $categoryName) {
-            $buttons[$row][] = ['text' => $categoryName, 'callback_data' => $command.'_'.$categoryId];
+            $buttons[$row][] = ['text' => $categoryName, 'callback_data' => $command.'_'.$recipeId.'_'.$categoryId];
 
             if (count($buttons[$row]) === 3) {
                 $row++;
             }
+        }
+
+        if ($category !== null) {
+            $buttons[$row + 1][] = ['text' => 'Назад', 'callback_data' => '/backRecipeCategory_'.$recipeId];
         }
 
         return $buttons;

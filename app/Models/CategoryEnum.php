@@ -18,6 +18,26 @@ enum CategoryEnum: int
     case SAUCES = 10;
     case NONE = 0;
 
+    case FIRST_COURSES_CHICKEN = 11;
+    case FIRST_COURSES_PORK = 12;
+    case FIRST_COURSES_BEEF = 13;
+    case FIRST_COURSES_FISH = 14;
+    case FIRST_COURSES_VEGETABLES = 15;
+
+    case MAIN_COURSES_CHICKEN = 21;
+    case MAIN_COURSES_PORK = 22;
+    case MAIN_COURSES_BEEF = 23;
+    case MAIN_COURSES_FISH = 24;
+    case MAIN_COURSES_OFFAL = 25;
+
+    case SALADS_CHICKEN = 51;
+    case SALADS_PORK = 52;
+    case SALADS_BEEF = 53;
+    case SALADS_FISH = 54;
+
+    case PREPARATIONS_BERRIES_FRUITS = 91;
+    case PREPARATIONS_VEGETABLES = 92;
+
     public const string BREAKFASTS_LABEL = 'Завтраки';
 
     public const string FIRST_COURSES_LABEL = 'Первые блюда';
@@ -40,8 +60,86 @@ enum CategoryEnum: int
 
     public const string NONE_LABEL = 'Без категории';
 
-    public static function labels(): array
+    public const string  FIRST_COURSES_CHICKEN_LABEL = 'Курица';
+
+    public const string  FIRST_COURSES_PORK_LABEL = 'Свинина';
+
+    public const string  FIRST_COURSES_BEEF_LABEL = 'Говядина';
+
+    public const string  FIRST_COURSES_FISH_LABEL = 'Рыба';
+
+    public const string  FIRST_COURSES_VEGETABLES_LABEL = 'Овощной';
+
+    public const string  MAIN_COURSES_CHICKEN_LABEL = 'Курица';
+
+    public const string  MAIN_COURSES_PORK_LABEL = 'Свинина';
+
+    public const string  MAIN_COURSES_BEEF_LABEL = 'Говядина';
+
+    public const string  MAIN_COURSES_FISH_LABEL = 'Рыба';
+
+    public const string  MAIN_COURSES_OFFAL_LABEL = 'Субпродукты';
+
+    public const string  SALADS_CHICKEN_LABEL = 'Курица';
+
+    public const string  SALADS_PORK_LABEL = 'Свинина';
+
+    public const string  SALADS_BEEF_LABEL = 'Говядина';
+
+    public const string  SALADS_FISH_LABEL = 'Рыба';
+
+    public const string  PREPARATIONS_BERRIES_FRUITS_LABEL = 'Ягоды/фрукты';
+
+    public const string  PREPARATIONS_VEGETABLES_LABEL = 'Овощи';
+
+    public static function parentLabels(): array
     {
+        return [
+            self::FIRST_COURSES->value => self::FIRST_COURSES_LABEL,
+            self::MAIN_COURSES->value => self::MAIN_COURSES_LABEL,
+            self::SALADS->value => self::SALADS_LABEL,
+            self::PREPARATIONS->value => self::PREPARATIONS_LABEL,
+        ];
+    }
+
+    public static function labels(?int $parentCategory = null): array
+    {
+        if ($parentCategory === self::FIRST_COURSES->value) {
+            return [
+                self::FIRST_COURSES_CHICKEN->value => self::FIRST_COURSES_CHICKEN_LABEL,
+                self::FIRST_COURSES_PORK->value => self::FIRST_COURSES_PORK_LABEL,
+                self::FIRST_COURSES_BEEF->value => self::FIRST_COURSES_BEEF_LABEL,
+                self::FIRST_COURSES_FISH->value => self::FIRST_COURSES_FISH_LABEL,
+                self::FIRST_COURSES_VEGETABLES->value => self::FIRST_COURSES_VEGETABLES_LABEL,
+            ];
+        }
+
+        if ($parentCategory === self::MAIN_COURSES->value) {
+            return [
+                self::MAIN_COURSES_CHICKEN->value => self::MAIN_COURSES_CHICKEN_LABEL,
+                self::MAIN_COURSES_PORK->value => self::MAIN_COURSES_PORK_LABEL,
+                self::MAIN_COURSES_BEEF->value => self::MAIN_COURSES_BEEF_LABEL,
+                self::MAIN_COURSES_FISH->value => self::MAIN_COURSES_FISH_LABEL,
+                self::MAIN_COURSES_OFFAL->value => self::MAIN_COURSES_OFFAL_LABEL,
+            ];
+        }
+
+        if ($parentCategory === self::SALADS->value) {
+            return [
+                self::SALADS_CHICKEN->value => self::SALADS_CHICKEN_LABEL,
+                self::SALADS_PORK->value => self::SALADS_PORK_LABEL,
+                self::SALADS_BEEF->value => self::SALADS_BEEF_LABEL,
+                self::SALADS_FISH->value => self::SALADS_FISH_LABEL,
+            ];
+        }
+
+        if ($parentCategory === self::PREPARATIONS->value) {
+            return [
+                self::PREPARATIONS_BERRIES_FRUITS->value => self::PREPARATIONS_BERRIES_FRUITS_LABEL,
+                self::PREPARATIONS_VEGETABLES->value => self::PREPARATIONS_VEGETABLES_LABEL,
+            ];
+        }
+
         return [
             self::BREAKFASTS->value => self::BREAKFASTS_LABEL,
             self::FIRST_COURSES->value => self::FIRST_COURSES_LABEL,
@@ -71,6 +169,22 @@ enum CategoryEnum: int
             self::PREPARATIONS_LABEL => self::PREPARATIONS->value,
             self::SAUCES_LABEL => self::SAUCES->value,
             self::NONE_LABEL => self::NONE->value,
+            self::FIRST_COURSES_CHICKEN_LABEL => self::FIRST_COURSES_CHICKEN->value,
+            self::FIRST_COURSES_PORK_LABEL => self::FIRST_COURSES_PORK->value,
+            self::FIRST_COURSES_BEEF_LABEL => self::FIRST_COURSES_BEEF->value,
+            self::FIRST_COURSES_FISH_LABEL => self::FIRST_COURSES_FISH->value,
+            self::FIRST_COURSES_VEGETABLES_LABEL => self::FIRST_COURSES_VEGETABLES->value,
+            self::MAIN_COURSES_CHICKEN_LABEL => self::MAIN_COURSES_CHICKEN->value,
+            self::MAIN_COURSES_PORK_LABEL => self::MAIN_COURSES_PORK->value,
+            self::MAIN_COURSES_BEEF_LABEL => self::MAIN_COURSES_BEEF->value,
+            self::MAIN_COURSES_FISH_LABEL => self::MAIN_COURSES_FISH->value,
+            self::MAIN_COURSES_OFFAL_LABEL => self::MAIN_COURSES_OFFAL->value,
+            self::SALADS_CHICKEN_LABEL => self::SALADS_CHICKEN->value,
+            self::SALADS_PORK_LABEL => self::SALADS_PORK->value,
+            self::SALADS_BEEF_LABEL => self::SALADS_BEEF->value,
+            self::SALADS_FISH_LABEL => self::SALADS_FISH->value,
+            self::PREPARATIONS_BERRIES_FRUITS_LABEL => self::PREPARATIONS_BERRIES_FRUITS->value,
+            self::PREPARATIONS_VEGETABLES_LABEL => self::PREPARATIONS_VEGETABLES->value,
         };
     }
 
@@ -88,6 +202,22 @@ enum CategoryEnum: int
             self::PREPARATIONS->value => self::PREPARATIONS_LABEL,
             self::SAUCES->value => self::SAUCES_LABEL,
             self::NONE->value => self::NONE_LABEL,
+            self::FIRST_COURSES_CHICKEN->value => self::FIRST_COURSES_CHICKEN_LABEL,
+            self::FIRST_COURSES_PORK->value => self::FIRST_COURSES_PORK_LABEL,
+            self::FIRST_COURSES_BEEF->value => self::FIRST_COURSES_BEEF_LABEL,
+            self::FIRST_COURSES_FISH->value => self::FIRST_COURSES_FISH_LABEL,
+            self::FIRST_COURSES_VEGETABLES->value => self::FIRST_COURSES_VEGETABLES_LABEL,
+            self::MAIN_COURSES_CHICKEN->value => self::MAIN_COURSES_CHICKEN_LABEL,
+            self::MAIN_COURSES_PORK->value => self::MAIN_COURSES_PORK_LABEL,
+            self::MAIN_COURSES_BEEF->value => self::MAIN_COURSES_BEEF_LABEL,
+            self::MAIN_COURSES_FISH->value => self::MAIN_COURSES_FISH_LABEL,
+            self::MAIN_COURSES_OFFAL->value => self::MAIN_COURSES_OFFAL_LABEL,
+            self::SALADS_CHICKEN->value => self::SALADS_CHICKEN_LABEL,
+            self::SALADS_PORK->value => self::SALADS_PORK_LABEL,
+            self::SALADS_BEEF->value => self::SALADS_BEEF_LABEL,
+            self::SALADS_FISH->value => self::SALADS_FISH_LABEL,
+            self::PREPARATIONS_BERRIES_FRUITS->value => self::PREPARATIONS_BERRIES_FRUITS_LABEL,
+            self::PREPARATIONS_VEGETABLES->value => self::PREPARATIONS_VEGETABLES_LABEL,
         };
     }
 
@@ -105,6 +235,22 @@ enum CategoryEnum: int
             self::PREPARATIONS => self::PREPARATIONS_LABEL,
             self::SAUCES => self::SAUCES_LABEL,
             self::NONE => self::NONE_LABEL,
+            self::FIRST_COURSES_CHICKEN => self::FIRST_COURSES_CHICKEN_LABEL,
+            self::FIRST_COURSES_PORK => self::FIRST_COURSES_PORK_LABEL,
+            self::FIRST_COURSES_BEEF => self::FIRST_COURSES_BEEF_LABEL,
+            self::FIRST_COURSES_FISH => self::FIRST_COURSES_FISH_LABEL,
+            self::FIRST_COURSES_VEGETABLES => self::FIRST_COURSES_VEGETABLES_LABEL,
+            self::MAIN_COURSES_CHICKEN => self::MAIN_COURSES_CHICKEN_LABEL,
+            self::MAIN_COURSES_PORK => self::MAIN_COURSES_PORK_LABEL,
+            self::MAIN_COURSES_BEEF => self::MAIN_COURSES_BEEF_LABEL,
+            self::MAIN_COURSES_FISH => self::MAIN_COURSES_FISH_LABEL,
+            self::MAIN_COURSES_OFFAL => self::MAIN_COURSES_OFFAL_LABEL,
+            self::SALADS_CHICKEN => self::SALADS_CHICKEN_LABEL,
+            self::SALADS_PORK => self::SALADS_PORK_LABEL,
+            self::SALADS_BEEF => self::SALADS_BEEF_LABEL,
+            self::SALADS_FISH => self::SALADS_FISH_LABEL,
+            self::PREPARATIONS_BERRIES_FRUITS => self::PREPARATIONS_BERRIES_FRUITS_LABEL,
+            self::PREPARATIONS_VEGETABLES => self::PREPARATIONS_VEGETABLES_LABEL,
         };
     }
 
@@ -122,6 +268,22 @@ enum CategoryEnum: int
             self::PREPARATIONS->value => self::PREPARATIONS,
             self::SAUCES->value => self::SAUCES,
             self::NONE->value => self::NONE,
+            self::FIRST_COURSES_CHICKEN->value => self::FIRST_COURSES_CHICKEN_LABEL,
+            self::FIRST_COURSES_PORK->value => self::FIRST_COURSES_PORK_LABEL,
+            self::FIRST_COURSES_BEEF->value => self::FIRST_COURSES_BEEF_LABEL,
+            self::FIRST_COURSES_FISH->value => self::FIRST_COURSES_FISH_LABEL,
+            self::FIRST_COURSES_VEGETABLES->value => self::FIRST_COURSES_VEGETABLES_LABEL,
+            self::MAIN_COURSES_CHICKEN->value => self::MAIN_COURSES_CHICKEN_LABEL,
+            self::MAIN_COURSES_PORK->value => self::MAIN_COURSES_PORK_LABEL,
+            self::MAIN_COURSES_BEEF->value => self::MAIN_COURSES_BEEF_LABEL,
+            self::MAIN_COURSES_FISH->value => self::MAIN_COURSES_FISH_LABEL,
+            self::MAIN_COURSES_OFFAL->value => self::MAIN_COURSES_OFFAL_LABEL,
+            self::SALADS_CHICKEN->value => self::SALADS_CHICKEN_LABEL,
+            self::SALADS_PORK->value => self::SALADS_PORK_LABEL,
+            self::SALADS_BEEF->value => self::SALADS_BEEF_LABEL,
+            self::SALADS_FISH->value => self::SALADS_FISH_LABEL,
+            self::PREPARATIONS_BERRIES_FRUITS->value => self::PREPARATIONS_BERRIES_FRUITS_LABEL,
+            self::PREPARATIONS_VEGETABLES->value => self::PREPARATIONS_VEGETABLES_LABEL,
         };
     }
 
@@ -139,6 +301,22 @@ enum CategoryEnum: int
             self::PREPARATIONS_LABEL => self::PREPARATIONS,
             self::SAUCES_LABEL => self::SAUCES,
             self::NONE_LABEL => self::NONE,
+            self::FIRST_COURSES_CHICKEN_LABEL => self::FIRST_COURSES_CHICKEN,
+            self::FIRST_COURSES_PORK_LABEL => self::FIRST_COURSES_PORK,
+            self::FIRST_COURSES_BEEF_LABEL => self::FIRST_COURSES_BEEF,
+            self::FIRST_COURSES_FISH_LABEL => self::FIRST_COURSES_FISH,
+            self::FIRST_COURSES_VEGETABLES_LABEL => self::FIRST_COURSES_VEGETABLES,
+            self::MAIN_COURSES_CHICKEN_LABEL => self::MAIN_COURSES_CHICKEN,
+            self::MAIN_COURSES_PORK_LABEL => self::MAIN_COURSES_PORK,
+            self::MAIN_COURSES_BEEF_LABEL => self::MAIN_COURSES_BEEF,
+            self::MAIN_COURSES_FISH_LABEL => self::MAIN_COURSES_FISH,
+            self::MAIN_COURSES_OFFAL_LABEL => self::MAIN_COURSES_OFFAL,
+            self::SALADS_CHICKEN_LABEL => self::SALADS_CHICKEN,
+            self::SALADS_PORK_LABEL => self::SALADS_PORK,
+            self::SALADS_BEEF_LABEL => self::SALADS_BEEF,
+            self::SALADS_FISH_LABEL => self::SALADS_FISH,
+            self::PREPARATIONS_BERRIES_FRUITS_LABEL => self::PREPARATIONS_BERRIES_FRUITS,
+            self::PREPARATIONS_VEGETABLES_LABEL => self::PREPARATIONS_VEGETABLES,
         };
     }
 }

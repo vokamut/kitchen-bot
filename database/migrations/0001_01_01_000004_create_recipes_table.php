@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('category');
-            $table->string('title');
+            $table->unsignedTinyInteger('category')->index();
+            $table->string('title')->collation('utf8mb4_unicode_ci')->charset('utf8mb4');
             $table->string('link', 2048)->nullable();
-            $table->text('text')->nullable();
+            $table->string('text', 4096)->nullable()->collation('utf8mb4_unicode_ci')->charset('utf8mb4');
             $table->timestamp('created_at');
         });
     }
