@@ -32,8 +32,10 @@ final class Bot
             return;
         }
 
-        if (in_array($this->telegram->message, CategoryEnum::labels(), true)) {
-            $this->searchRecipeByCategory(CategoryEnum::getCaseByLabel($this->telegram->message));
+        $category = preg_replace('~ \(\d+\)$~', '', $this->telegram->message);
+
+        if (in_array($category, CategoryEnum::labels(), true)) {
+            $this->searchRecipeByCategory(CategoryEnum::getCaseByLabel($category));
 
             $this->telegramUser->state = null;
             $this->telegramUser->save();
