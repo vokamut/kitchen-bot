@@ -170,7 +170,7 @@ final class Bot
         $this->telegram->editMessageTextWithInlineButtons(
             $this->telegram->chatId,
             $this->telegram->messageId,
-            $this->telegram->fullMessage,
+            $this->telegram->request['callback_query']['message']['text'],
             [[
                 ['text' => 'Нет', 'callback_data' => '/deleteNo_'.$recipeId],
                 ['text' => 'Точно удалить?', 'callback_data' => '/deleteYes_'.$recipeId],
@@ -185,7 +185,7 @@ final class Bot
         $this->telegram->editMessageTextWithInlineButtons(
             $this->telegram->chatId,
             $this->telegram->messageId,
-            $this->telegram->fullMessage,
+            $this->telegram->request['callback_query']['message']['text'],
             [[['text' => 'Удалить', 'callback_data' => '/delete_'.$recipeId]]],
         );
     }
