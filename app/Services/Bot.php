@@ -142,9 +142,17 @@ final class Bot
         $category = (int) $this->telegram->commandPostfixes[1];
 
         $recipe = Recipe::query()->where('id', $recipeId)->first();
+
+        if ($recipe === null) {
+            $this->telegram->deleteMessage($this->telegram->chatId, $this->telegram->messageId);
+
+            return;
+        }
+
         $recipe->category = CategoryEnum::getCaseByValue($category);
         $recipe->save();
 
+        $this->telegram->deleteMessage($this->telegram->chatId, $this->telegram->messageId);
         $this->telegram->replyMessage('Рецепт "'.$recipe->title.'" помещен в категорию "'.CategoryEnum::getLabelByCase($recipe->category).'"');
 
         $this->telegramUser->state = null;
@@ -251,10 +259,9 @@ final class Bot
             return;
         }
 
-        $this->telegram->replyMessageWithInlineButtons(
-            'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
-            [[['text' => 'Удалить', 'callback_data' => '/delete_'.$recipe->id]]],
-            false
+        $this->telegram->replyMessage(
+            message: 'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
+            disableWebPagePreview: false
         );
 
         $this->telegramUser->state = null;
@@ -268,8 +275,10 @@ final class Bot
         $buttons = [];
 
         $row = 0;
-        foreach ($categories as $categoryName) {
-            $buttons[$row][] = $categoryName;
+        foreach ($categories as $categoryId => $categoryName) {
+            $count = Recipe::query()->select('id')->where('category', $categoryId)->count();
+
+            $buttons[$row][] = $categoryName.' ('.$count.')';
 
             if (count($buttons[$row]) === 3) {
                 $row++;
