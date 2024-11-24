@@ -61,7 +61,7 @@ final class Telegram
             $this->lastName = $this->request['callback_query']['from']['last_name'] ?? '';
             $this->isPrivate = $this->request['callback_query']['message']['chat']['id'] > 0;
             $this->messageId = $this->request['callback_query']['message']['message_id'];
-            $this->fullMessage = $this->request['callback_query']['message']['text'];
+            $this->fullMessage = $this->request['callback_query']['data'];
             $this->document = $this->request['callback_query']['document'] ?? null;
         } elseif (array_key_exists('edited_message', $this->request)) {
             $this->userId = $this->request['edited_message']['from']['id'];
