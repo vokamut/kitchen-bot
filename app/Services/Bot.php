@@ -46,6 +46,8 @@ final class Bot
         $flows = [
             '/start' => 'start',
             '/delete' => 'delete',
+            '/deleteNo' => 'deleteNo',
+            '/deleteYes' => 'deleteYes',
             'Назад' => 'back',
             'Добавить' => 'new',
             '/new' => 'new',
@@ -165,6 +167,33 @@ final class Bot
     {
         $recipeId = (int) $this->telegram->commandPostfixes[0];
 
+        $this->telegram->editMessageTextWithInlineButtons(
+            $this->telegram->chatId,
+            $this->telegram->messageId,
+            $this->telegram->fullMessage,
+            [[
+                ['text' => 'Нет', 'callback_data' => '/deleteNo_'.$recipeId],
+                ['text' => 'Точно удалить?', 'callback_data' => '/deleteYes_'.$recipeId],
+            ]],
+        );
+    }
+
+    private function deleteNo(): void
+    {
+        $recipeId = (int) $this->telegram->commandPostfixes[0];
+
+        $this->telegram->editMessageTextWithInlineButtons(
+            $this->telegram->chatId,
+            $this->telegram->messageId,
+            $this->telegram->fullMessage,
+            [[['text' => 'Удалить', 'callback_data' => '/delete_'.$recipeId]]],
+        );
+    }
+
+    private function deleteYes(): void
+    {
+        $recipeId = (int) $this->telegram->commandPostfixes[0];
+
         Recipe::query()->where('id', $recipeId)->delete();
 
         $this->telegram->deleteMessage($this->telegram->chatId, $this->telegram->messageId);
@@ -261,9 +290,10 @@ final class Bot
             return;
         }
 
-        $this->telegram->replyMessage(
-            message: 'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
-            disableWebPagePreview: false
+        $this->telegram->replyMessageWithInlineButtons(
+            'Рецепт: '.$recipe->title.PHP_EOL.PHP_EOL.$recipe->text.$recipe->link,
+            [[['text' => 'Удалить', 'callback_data' => '/delete_'.$recipe->id]]],
+            false
         );
 
         $this->telegramUser->state = null;
