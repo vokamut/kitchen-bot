@@ -262,7 +262,7 @@ final class Bot
         }
 
         $category = null;
-        if (array_key_exists(0, $this->telegram->commandPostfixes)) {
+        if (is_array($this->telegram->commandPostfixes) && array_key_exists(0, $this->telegram->commandPostfixes)) {
             $category = (int) $this->telegram->commandPostfixes[0];
         }
 
